@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2, CheckCircle, XCircle } from "lucide-react"
 import { studentsData } from "@/lib/studentsData"
-import { studentGrades } from "@/lib/studentGrades"
+import { gradesData } from "@/lib/hardcoded-grades"
 
 export default function ResultsPage() {
   const [loading, setLoading] = useState(true)
@@ -15,22 +15,14 @@ export default function ResultsPage() {
   const studentId = searchParams.get("studentId") || ""
 
   const studentName = studentsData[studentId as keyof typeof studentsData]
-  const studentGradeRecord = studentGrades[studentId]
-  const grades = studentGradeRecord
-    ? Object.entries(studentGradeRecord).map(([subject, grade]) => ({
-        subject,
-        grade,
-      }))
-    : []
+  const studentGradeRecord = gradesData[studentId as keyof typeof gradesData]
+  const grades = studentGradeRecord || []
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
       setLoading(false)
     }, 3000)
-
-    return () => {
-      clearTimeout(timer1)
-    }
+    return () => clearTimeout(timer1)
   }, [])
 
   if (loading) {
@@ -41,7 +33,6 @@ export default function ResultsPage() {
             <h1 className="text-2xl font-bold">FCAIH - نظام النتائج الإلكترونى</h1>
           </div>
         </header>
-
         <main className="flex-1 container mx-auto py-12 px-4 flex items-center justify-center">
           <div className="text-center">
             <Loader2 className="h-16 w-16 animate-spin mx-auto mb-6 text-blue-700" />
@@ -52,7 +43,6 @@ export default function ResultsPage() {
             </div>
           </div>
         </main>
-
         <footer className="bg-gray-200 p-4 text-center text-sm text-gray-600">
           <p>© 2024 كلية الحاسبات والذكاء الاصطناعى - جامعة حلوان</p>
         </footer>
@@ -68,7 +58,6 @@ export default function ResultsPage() {
             <h1 className="text-2xl font-bold">FCAIH - نظام النتائج الإلكترونى</h1>
           </div>
         </header>
-
         <main className="flex-1 container mx-auto py-12 px-4">
           <div className="max-w-lg mx-auto">
             <Card className="shadow-lg border-red-200">
@@ -88,7 +77,6 @@ export default function ResultsPage() {
             </Card>
           </div>
         </main>
-
         <footer className="bg-gray-200 p-4 text-center text-sm text-gray-600">
           <p>© 2024 كلية الحاسبات والذكاء الاصطناعى - جامعة حلوان</p>
         </footer>
@@ -103,7 +91,6 @@ export default function ResultsPage() {
           <h1 className="text-2xl font-bold">FCAIH - نظام النتائج الإلكترونى</h1>
         </div>
       </header>
-
       <main className="flex-1 container mx-auto py-12 px-4">
         <div className="max-w-4xl mx-auto">
           <Card className="shadow-lg">
@@ -115,7 +102,7 @@ export default function ResultsPage() {
               <div className="text-center">
                 <p className="text-lg font-medium">الرقم الجامعى: {studentId}</p>
                 <p className="text-xl font-bold text-blue-700 mt-2">{studentName}</p>
-                <p className="text-sm text-gray-600 mt-1">الفرقة الثانية - الفصل الدراسى الأول 2024/2025</p>
+                <p className="text-sm text-gray-600 mt-1">الفرقة الثانية - الفصل الدراسى الثاني 2024/2025</p>
               </div>
             </CardHeader>
             <CardContent className="p-6">
@@ -163,18 +150,13 @@ export default function ResultsPage() {
                   </tbody>
                 </table>
               </div>
-
               <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-medium">المجموع الكلى:</span>
-                  <span className="text-2xl font-bold text-blue-700">
-                    {grades.reduce((sum, item) => sum + item.grade, 0)} / {grades.length * 100}
-                  </span>
-                </div>
+ 
+                
                 <div className="flex justify-between items-center mt-2">
-                  <span className="text-lg font-medium">النسبة المئوية:</span>
+                  <span className="text-lg font-medium">GPA:</span>
                   <span className="text-xl font-bold text-green-600">
-                    {Math.round((grades.reduce((sum, item) => sum + item.grade, 0) / (grades.length * 100)) * 100)}%
+                    {(grades.reduce((sum, item) => sum + item.grade, 0) / grades.length / 25).toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -190,7 +172,6 @@ export default function ResultsPage() {
           </Card>
         </div>
       </main>
-
       <footer className="bg-gray-200 p-4 text-center text-sm text-gray-600">
         <p>© 2024 كلية الحاسبات والذكاء الاصطناعى - جامعة حلوان. جميع الحقوق محفوظة</p>
       </footer>
